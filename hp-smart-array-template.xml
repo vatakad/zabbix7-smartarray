@@ -1,404 +1,362 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <zabbix_export>
-    <version>2.0</version>
-    <date>2013-04-17T05:07:12Z</date>
-    <groups>
-        <group>
+    <version>7.0</version>
+    <template_groups>
+        <template_group>
+            <uuid>dd11194253d64bf2a8d76d17b3786e23</uuid>
             <name>Templates</name>
-        </group>
-    </groups>
+        </template_group>
+    </template_groups>
     <templates>
         <template>
+            <uuid>d8845109bd2e44a19fdc4813c2390824</uuid>
             <template>HP-SmartArray-Template</template>
             <name>HP-SmartArray-Template</name>
+            <description>HP Smart Array monitoring via ssacli (tested with P410, P222). Updated for Zabbix 7.0 + ssacli.</description>
             <groups>
                 <group>
                     <name>Templates</name>
                 </group>
             </groups>
-            <applications>
-                <application>
-                    <name>Smart Array</name>
-                </application>
-            </applications>
-            <items/>
+            <macros>
+                <macro>
+                    <macro>{$HPRAID.PD.TEMP.MAX}</macro>
+                    <value>60</value>
+                    <description>Maximum allowed physical drive temperature in Celsius</description>
+                </macro>
+                <macro>
+                    <macro>{$HPRAID.PD.TEMP.MIN}</macro>
+                    <value>0</value>
+                    <description>Minimum allowed physical drive temperature in Celsius</description>
+                </macro>
+            </macros>
             <discovery_rules>
+                <!-- ==================== CONTROLLERS ==================== -->
                 <discovery_rule>
+                    <uuid>fd41e5feab5142b6b638227aa72d7ea8</uuid>
                     <name>controllers discovery</name>
-                    <type>0</type>
-                    <snmp_community/>
-                    <snmp_oid/>
+                    <type>ZABBIX_PASSIVE</type>
                     <key>hpraid.ctrl.discovery</key>
-                    <delay>300</delay>
-                    <status>0</status>
-                    <allowed_hosts/>
-                    <snmpv3_securityname/>
-                    <snmpv3_securitylevel>0</snmpv3_securitylevel>
-                    <snmpv3_authpassphrase/>
-                    <snmpv3_privpassphrase/>
-                    <delay_flex/>
-                    <params/>
-                    <ipmi_sensor/>
-                    <authtype>0</authtype>
-                    <username/>
-                    <password/>
-                    <publickey/>
-                    <privatekey/>
-                    <port/>
-                    <filter>{#CTRL_SLOT}:</filter>
-                    <lifetime>7</lifetime>
-                    <description/>
+                    <delay>300s</delay>
+                    <status>ENABLED</status>
+                    <filter>
+                        <evaltype>AND_OR</evaltype>
+                        <conditions>
+                            <condition>
+                                <macro>{#CTRL_SLOT}</macro>
+                                <value>^[0-9]+$</value>
+                                <operator>MATCHES_REGEX</operator>
+                                <formulaid>A</formulaid>
+                            </condition>
+                        </conditions>
+                    </filter>
+                    <lifetime_type>DELETE_AFTER</lifetime_type>
+                    <lifetime>7d</lifetime>
+                    <enabled_lifetime_type>DISABLE_NEVER</enabled_lifetime_type>
                     <item_prototypes>
                         <item_prototype>
-                            <name>Smart Array: battery status on slot $1</name>
-                            <type>2</type>
-                            <snmp_community/>
-                            <multiplier>0</multiplier>
-                            <snmp_oid/>
+                            <uuid>645756ed400144c5a7aeea0d56ea3032</uuid>
+                            <name>Smart Array: battery status on slot {#CTRL_SLOT}</name>
+                            <type>TRAP</type>
                             <key>hpraid.bbu.status[{#CTRL_SLOT}]</key>
                             <delay>0</delay>
-                            <history>7</history>
-                            <trends>365</trends>
-                            <status>0</status>
-                            <value_type>4</value_type>
-                            <allowed_hosts/>
-                            <units/>
-                            <delta>0</delta>
-                            <snmpv3_securityname/>
-                            <snmpv3_securitylevel>0</snmpv3_securitylevel>
-                            <snmpv3_authpassphrase/>
-                            <snmpv3_privpassphrase/>
-                            <formula>1</formula>
-                            <delay_flex/>
-                            <params/>
-                            <ipmi_sensor/>
-                            <data_type>0</data_type>
-                            <authtype>0</authtype>
-                            <username/>
-                            <password/>
-                            <publickey/>
-                            <privatekey/>
-                            <port/>
-                            <description/>
-                            <inventory_link>0</inventory_link>
-                            <applications>
-                                <application>
-                                    <name>Smart Array</name>
-                                </application>
-                            </applications>
-                            <valuemap/>
+                            <history>7d</history>
+                            <value_type>TEXT</value_type>
+                            <status>ENABLED</status>
+                            <description>Battery/Capacitor status on HP Smart Array controller in slot {#CTRL_SLOT}</description>
+                            <tags>
+                                <tag>
+                                    <tag>Application</tag>
+                                    <value>Smart Array</value>
+                                </tag>
+                                <tag>
+                                    <tag>Component</tag>
+                                    <value>BBU</value>
+                                </tag>
+                            </tags>
                         </item_prototype>
                         <item_prototype>
-                            <name>Smart Array: cache $2 status on slot $1</name>
-                            <type>2</type>
-                            <snmp_community/>
-                            <multiplier>0</multiplier>
-                            <snmp_oid/>
+                            <uuid>3cbf1525592344de96d9ee1e19f1f834</uuid>
+                            <name>Smart Array: cache status on slot {#CTRL_SLOT}</name>
+                            <type>TRAP</type>
                             <key>hpraid.cache.status[{#CTRL_SLOT}]</key>
                             <delay>0</delay>
-                            <history>7</history>
-                            <trends>365</trends>
-                            <status>0</status>
-                            <value_type>4</value_type>
-                            <allowed_hosts/>
-                            <units/>
-                            <delta>0</delta>
-                            <snmpv3_securityname/>
-                            <snmpv3_securitylevel>0</snmpv3_securitylevel>
-                            <snmpv3_authpassphrase/>
-                            <snmpv3_privpassphrase/>
-                            <formula>1</formula>
-                            <delay_flex/>
-                            <params/>
-                            <ipmi_sensor/>
-                            <data_type>0</data_type>
-                            <authtype>0</authtype>
-                            <username/>
-                            <password/>
-                            <publickey/>
-                            <privatekey/>
-                            <port/>
-                            <description/>
-                            <inventory_link>0</inventory_link>
-                            <applications>
-                                <application>
-                                    <name>Smart Array</name>
-                                </application>
-                            </applications>
-                            <valuemap/>
+                            <history>7d</history>
+                            <value_type>TEXT</value_type>
+                            <status>ENABLED</status>
+                            <description>Cache status on HP Smart Array controller in slot {#CTRL_SLOT}</description>
+                            <tags>
+                                <tag>
+                                    <tag>Application</tag>
+                                    <value>Smart Array</value>
+                                </tag>
+                                <tag>
+                                    <tag>Component</tag>
+                                    <value>Cache</value>
+                                </tag>
+                            </tags>
                         </item_prototype>
                         <item_prototype>
-                            <name>Smart Array: controller status on slot $1</name>
-                            <type>2</type>
-                            <snmp_community/>
-                            <multiplier>0</multiplier>
-                            <snmp_oid/>
+                            <uuid>4974cf43cfff4615ba2698b57b800450</uuid>
+                            <name>Smart Array: controller status on slot {#CTRL_SLOT}</name>
+                            <type>TRAP</type>
                             <key>hpraid.ctrl.status[{#CTRL_SLOT}]</key>
                             <delay>0</delay>
-                            <history>7</history>
-                            <trends>365</trends>
-                            <status>0</status>
-                            <value_type>4</value_type>
-                            <allowed_hosts/>
-                            <units/>
-                            <delta>0</delta>
-                            <snmpv3_securityname/>
-                            <snmpv3_securitylevel>0</snmpv3_securitylevel>
-                            <snmpv3_authpassphrase/>
-                            <snmpv3_privpassphrase/>
-                            <formula>1</formula>
-                            <delay_flex/>
-                            <params/>
-                            <ipmi_sensor/>
-                            <data_type>0</data_type>
-                            <authtype>0</authtype>
-                            <username/>
-                            <password/>
-                            <publickey/>
-                            <privatekey/>
-                            <port/>
-                            <description/>
-                            <inventory_link>0</inventory_link>
-                            <applications>
-                                <application>
-                                    <name>Smart Array</name>
-                                </application>
-                            </applications>
-                            <valuemap/>
+                            <history>7d</history>
+                            <value_type>TEXT</value_type>
+                            <status>ENABLED</status>
+                            <description>Controller status on HP Smart Array controller in slot {#CTRL_SLOT}</description>
+                            <tags>
+                                <tag>
+                                    <tag>Application</tag>
+                                    <value>Smart Array</value>
+                                </tag>
+                                <tag>
+                                    <tag>Component</tag>
+                                    <value>Controller</value>
+                                </tag>
+                            </tags>
                         </item_prototype>
                     </item_prototypes>
                     <trigger_prototypes>
                         <trigger_prototype>
-                            <expression>{HP-SmartArray-Template:hpraid.cache.status[{#CTRL_SLOT}].str(OK)}=0</expression>
-                            <name>Smart Array: cache controller in slot {#CTRL_SLOT} state is {ITEM.LASTVALUE}</name>
-                            <url/>
-                            <status>0</status>
-                            <priority>4</priority>
-                            <description/>
-                            <type>0</type>
-                        </trigger_prototype>
-                        <trigger_prototype>
-                            <expression>{HP-SmartArray-Template:hpraid.bbu.status[{#CTRL_SLOT}].str(OK)}=0</expression>
-                            <name>Smart Array: controller bbu in slot {#CTRL_SLOT} state is {ITEM.LASTVALUE}</name>
-                            <url/>
-                            <status>0</status>
-                            <priority>4</priority>
-                            <description/>
-                            <type>0</type>
-                        </trigger_prototype>
-                        <trigger_prototype>
-                            <expression>{HP-SmartArray-Template:hpraid.ctrl.status[{#CTRL_SLOT}].str(OK)}=0</expression>
+                            <uuid>eb9009ea9a164e448cb3944bed7709d6</uuid>
+                            <expression>find(/HP-SmartArray-Template/hpraid.ctrl.status[{#CTRL_SLOT}],,"like","OK")=0 and length(last(/HP-SmartArray-Template/hpraid.ctrl.status[{#CTRL_SLOT}]))&gt;0</expression>
                             <name>Smart Array: controller in slot {#CTRL_SLOT} state is {ITEM.LASTVALUE}</name>
-                            <url/>
-                            <status>0</status>
-                            <priority>4</priority>
-                            <description/>
-                            <type>0</type>
+                            <status>ENABLED</status>
+                            <priority>HIGH</priority>
+                            <description>HP Smart Array controller in slot {#CTRL_SLOT} is not in OK state.</description>
+                            <type>SINGLE</type>
+                            <tags>
+                                <tag>
+                                    <tag>Application</tag>
+                                    <value>Smart Array</value>
+                                </tag>
+                                <tag>
+                                    <tag>Component</tag>
+                                    <value>Controller</value>
+                                </tag>
+                            </tags>
+                        </trigger_prototype>
+                        <trigger_prototype>
+                            <uuid>378a8f7d61f443f9b7a20c676551e4e8</uuid>
+                            <expression>find(/HP-SmartArray-Template/hpraid.cache.status[{#CTRL_SLOT}],,"like","OK")=0 and length(last(/HP-SmartArray-Template/hpraid.cache.status[{#CTRL_SLOT}]))&gt;0</expression>
+                            <name>Smart Array: cache controller in slot {#CTRL_SLOT} state is {ITEM.LASTVALUE}</name>
+                            <status>ENABLED</status>
+                            <priority>HIGH</priority>
+                            <description>HP Smart Array cache in slot {#CTRL_SLOT} is not in OK state.</description>
+                            <type>SINGLE</type>
+                            <tags>
+                                <tag>
+                                    <tag>Application</tag>
+                                    <value>Smart Array</value>
+                                </tag>
+                                <tag>
+                                    <tag>Component</tag>
+                                    <value>Cache</value>
+                                </tag>
+                            </tags>
+                        </trigger_prototype>
+                        <trigger_prototype>
+                            <uuid>c26b0a9f7d454b5f9ef39004be0a1b29</uuid>
+                            <expression>find(/HP-SmartArray-Template/hpraid.bbu.status[{#CTRL_SLOT}],,"like","OK")=0 and length(last(/HP-SmartArray-Template/hpraid.bbu.status[{#CTRL_SLOT}]))&gt;0</expression>
+                            <name>Smart Array: controller bbu in slot {#CTRL_SLOT} state is {ITEM.LASTVALUE}</name>
+                            <status>ENABLED</status>
+                            <priority>HIGH</priority>
+                            <description>HP Smart Array battery/capacitor in slot {#CTRL_SLOT} is not in OK state.</description>
+                            <type>SINGLE</type>
+                            <tags>
+                                <tag>
+                                    <tag>Application</tag>
+                                    <value>Smart Array</value>
+                                </tag>
+                                <tag>
+                                    <tag>Component</tag>
+                                    <value>BBU</value>
+                                </tag>
+                            </tags>
                         </trigger_prototype>
                     </trigger_prototypes>
-                    <graph_prototypes/>
                 </discovery_rule>
+
+                <!-- ==================== LOGICAL VOLUMES ==================== -->
                 <discovery_rule>
+                    <uuid>6f581da6428141449166d313e3df3451</uuid>
                     <name>logical volumes discovery</name>
-                    <type>0</type>
-                    <snmp_community/>
-                    <snmp_oid/>
+                    <type>ZABBIX_PASSIVE</type>
                     <key>hpraid.ld.discovery</key>
-                    <delay>300</delay>
-                    <status>0</status>
-                    <allowed_hosts/>
-                    <snmpv3_securityname/>
-                    <snmpv3_securitylevel>0</snmpv3_securitylevel>
-                    <snmpv3_authpassphrase/>
-                    <snmpv3_privpassphrase/>
-                    <delay_flex/>
-                    <params/>
-                    <ipmi_sensor/>
-                    <authtype>0</authtype>
-                    <username/>
-                    <password/>
-                    <publickey/>
-                    <privatekey/>
-                    <port/>
-                    <filter>{#LD}:</filter>
-                    <lifetime>7</lifetime>
-                    <description/>
+                    <delay>300s</delay>
+                    <status>ENABLED</status>
+                    <filter>
+                        <evaltype>AND_OR</evaltype>
+                        <conditions>
+                            <condition>
+                                <macro>{#LD}</macro>
+                                <value>^[0-9]+:[0-9]+$</value>
+                                <operator>MATCHES_REGEX</operator>
+                                <formulaid>A</formulaid>
+                            </condition>
+                        </conditions>
+                    </filter>
+                    <lifetime_type>DELETE_AFTER</lifetime_type>
+                    <lifetime>7d</lifetime>
+                    <enabled_lifetime_type>DISABLE_NEVER</enabled_lifetime_type>
                     <item_prototypes>
                         <item_prototype>
-                            <name>logical volumes $1 status</name>
-                            <type>2</type>
-                            <snmp_community/>
-                            <multiplier>0</multiplier>
-                            <snmp_oid/>
+                            <uuid>a7982bf2a5304278b4fbf1be5928534b</uuid>
+                            <name>logical volumes {#LD} status</name>
+                            <type>TRAP</type>
                             <key>hpraid.ld.status[{#LD}]</key>
                             <delay>0</delay>
-                            <history>7</history>
-                            <trends>365</trends>
-                            <status>0</status>
-                            <value_type>4</value_type>
-                            <allowed_hosts/>
-                            <units/>
-                            <delta>0</delta>
-                            <snmpv3_securityname/>
-                            <snmpv3_securitylevel>0</snmpv3_securitylevel>
-                            <snmpv3_authpassphrase/>
-                            <snmpv3_privpassphrase/>
-                            <formula>1</formula>
-                            <delay_flex/>
-                            <params/>
-                            <ipmi_sensor/>
-                            <data_type>0</data_type>
-                            <authtype>0</authtype>
-                            <username/>
-                            <password/>
-                            <publickey/>
-                            <privatekey/>
-                            <port/>
-                            <description/>
-                            <inventory_link>0</inventory_link>
-                            <applications>
-                                <application>
-                                    <name>Smart Array</name>
-                                </application>
-                            </applications>
-                            <valuemap/>
+                            <history>7d</history>
+                            <value_type>TEXT</value_type>
+                            <status>ENABLED</status>
+                            <description>Status of logical volume {#LD} (slot:ld)</description>
+                            <tags>
+                                <tag>
+                                    <tag>Application</tag>
+                                    <value>Smart Array</value>
+                                </tag>
+                                <tag>
+                                    <tag>Component</tag>
+                                    <value>Logical Volume</value>
+                                </tag>
+                            </tags>
                         </item_prototype>
                     </item_prototypes>
                     <trigger_prototypes>
                         <trigger_prototype>
-                            <expression>{HP-SmartArray-Template:hpraid.ld.status[{#LD}].str(OK)}=0</expression>
-                            <name>Smart Array: logical volume state is {ITEM.LASTVALUE} on {HOSTNAME}</name>
-                            <url/>
-                            <status>0</status>
-                            <priority>4</priority>
-                            <description/>
-                            <type>0</type>
+                            <uuid>7cd8b0369f704b19b1d4602d347e2120</uuid>
+                            <expression>find(/HP-SmartArray-Template/hpraid.ld.status[{#LD}],,"like","OK")=0 and length(last(/HP-SmartArray-Template/hpraid.ld.status[{#LD}]))&gt;0</expression>
+                            <name>Smart Array: logical volume {#LD} state is {ITEM.LASTVALUE} on {HOST.HOST}</name>
+                            <status>ENABLED</status>
+                            <priority>HIGH</priority>
+                            <description>Logical volume {#LD} is not in OK state.</description>
+                            <type>SINGLE</type>
+                            <tags>
+                                <tag>
+                                    <tag>Application</tag>
+                                    <value>Smart Array</value>
+                                </tag>
+                                <tag>
+                                    <tag>Component</tag>
+                                    <value>Logical Volume</value>
+                                </tag>
+                            </tags>
                         </trigger_prototype>
                     </trigger_prototypes>
-                    <graph_prototypes/>
                 </discovery_rule>
+
+                <!-- ==================== PHYSICAL DRIVES ==================== -->
                 <discovery_rule>
+                    <uuid>5e0b3535f53d4ee2a095d5cc6fef069a</uuid>
                     <name>physical drives discovery</name>
-                    <type>0</type>
-                    <snmp_community/>
-                    <snmp_oid/>
+                    <type>ZABBIX_PASSIVE</type>
                     <key>hpraid.pd.discovery</key>
-                    <delay>300</delay>
-                    <status>0</status>
-                    <allowed_hosts/>
-                    <snmpv3_securityname/>
-                    <snmpv3_securitylevel>0</snmpv3_securitylevel>
-                    <snmpv3_authpassphrase/>
-                    <snmpv3_privpassphrase/>
-                    <delay_flex/>
-                    <params/>
-                    <ipmi_sensor/>
-                    <authtype>0</authtype>
-                    <username/>
-                    <password/>
-                    <publickey/>
-                    <privatekey/>
-                    <port/>
-                    <filter>{#PD}:</filter>
-                    <lifetime>7</lifetime>
-                    <description/>
+                    <delay>300s</delay>
+                    <status>ENABLED</status>
+                    <filter>
+                        <evaltype>AND_OR</evaltype>
+                        <conditions>
+                            <condition>
+                                <macro>{#PD}</macro>
+                                <value>^[0-9]+:.+$</value>
+                                <operator>MATCHES_REGEX</operator>
+                                <formulaid>A</formulaid>
+                            </condition>
+                        </conditions>
+                    </filter>
+                    <lifetime_type>DELETE_AFTER</lifetime_type>
+                    <lifetime>7d</lifetime>
+                    <enabled_lifetime_type>DISABLE_NEVER</enabled_lifetime_type>
                     <item_prototypes>
                         <item_prototype>
-                            <name>Physical drive $1 status</name>
-                            <type>2</type>
-                            <snmp_community/>
-                            <multiplier>0</multiplier>
-                            <snmp_oid/>
+                            <uuid>425d9a16e98f47fdb68636ce161f012b</uuid>
+                            <name>Physical drive {#PD} status</name>
+                            <type>TRAP</type>
                             <key>hpraid.pd.status[{#PD}]</key>
                             <delay>0</delay>
-                            <history>7</history>
-                            <trends>365</trends>
-                            <status>0</status>
-                            <value_type>4</value_type>
-                            <allowed_hosts/>
-                            <units/>
-                            <delta>0</delta>
-                            <snmpv3_securityname/>
-                            <snmpv3_securitylevel>0</snmpv3_securitylevel>
-                            <snmpv3_authpassphrase/>
-                            <snmpv3_privpassphrase/>
-                            <formula>1</formula>
-                            <delay_flex/>
-                            <params/>
-                            <ipmi_sensor/>
-                            <data_type>0</data_type>
-                            <authtype>0</authtype>
-                            <username/>
-                            <password/>
-                            <publickey/>
-                            <privatekey/>
-                            <port/>
-                            <description/>
-                            <inventory_link>0</inventory_link>
-                            <applications>
-                                <application>
-                                    <name>Smart Array</name>
-                                </application>
-                            </applications>
-                            <valuemap/>
+                            <history>7d</history>
+                            <value_type>TEXT</value_type>
+                            <status>ENABLED</status>
+                            <description>Status of physical drive {#PD} (slot:port:box:bay)</description>
+                            <tags>
+                                <tag>
+                                    <tag>Application</tag>
+                                    <value>Smart Array</value>
+                                </tag>
+                                <tag>
+                                    <tag>Component</tag>
+                                    <value>Physical Drive</value>
+                                </tag>
+                            </tags>
                         </item_prototype>
                         <item_prototype>
-                            <name>Physical drive $1 temperature</name>
-                            <type>2</type>
-                            <snmp_community/>
-                            <multiplier>0</multiplier>
-                            <snmp_oid/>
+                            <uuid>bdba7b9e3188413986b889a5f2692648</uuid>
+                            <name>Physical drive {#PD} temperature</name>
+                            <type>TRAP</type>
                             <key>hpraid.pd.temperature[{#PD}]</key>
                             <delay>0</delay>
-                            <history>7</history>
-                            <trends>365</trends>
-                            <status>0</status>
-                            <value_type>3</value_type>
-                            <allowed_hosts/>
-                            <units/>
-                            <delta>0</delta>
-                            <snmpv3_securityname/>
-                            <snmpv3_securitylevel>0</snmpv3_securitylevel>
-                            <snmpv3_authpassphrase/>
-                            <snmpv3_privpassphrase/>
-                            <formula>1</formula>
-                            <delay_flex/>
-                            <params/>
-                            <ipmi_sensor/>
-                            <data_type>0</data_type>
-                            <authtype>0</authtype>
-                            <username/>
-                            <password/>
-                            <publickey/>
-                            <privatekey/>
-                            <port/>
-                            <description/>
-                            <inventory_link>0</inventory_link>
-                            <applications>
-                                <application>
-                                    <name>Smart Array</name>
-                                </application>
-                            </applications>
-                            <valuemap/>
+                            <history>7d</history>
+                            <trends>365d</trends>
+                            <value_type>UNSIGNED</value_type>
+                            <units>C</units>
+                            <status>ENABLED</status>
+                            <description>Current temperature of physical drive {#PD} in Celsius</description>
+                            <tags>
+                                <tag>
+                                    <tag>Application</tag>
+                                    <value>Smart Array</value>
+                                </tag>
+                                <tag>
+                                    <tag>Component</tag>
+                                    <value>Physical Drive</value>
+                                </tag>
+                            </tags>
                         </item_prototype>
                     </item_prototypes>
                     <trigger_prototypes>
                         <trigger_prototype>
-                            <expression>{HP-SmartArray-Template:hpraid.pd.status[{#PD}].str(OK)}=0</expression>
-                            <name>Smart Array: disk state is {ITEM.LASTVALUE} on {HOSTNAME}</name>
-                            <url/>
-                            <status>0</status>
-                            <priority>4</priority>
-                            <description/>
-                            <type>0</type>
+                            <uuid>23ff23717025416699ed484a3be405fc</uuid>
+                            <expression>find(/HP-SmartArray-Template/hpraid.pd.status[{#PD}],,"like","OK")=0 and length(last(/HP-SmartArray-Template/hpraid.pd.status[{#PD}]))&gt;0</expression>
+                            <name>Smart Array: disk {#PD} state is {ITEM.LASTVALUE} on {HOST.HOST}</name>
+                            <status>ENABLED</status>
+                            <priority>HIGH</priority>
+                            <description>Physical drive {#PD} is not in OK state.</description>
+                            <type>SINGLE</type>
+                            <tags>
+                                <tag>
+                                    <tag>Application</tag>
+                                    <value>Smart Array</value>
+                                </tag>
+                                <tag>
+                                    <tag>Component</tag>
+                                    <value>Physical Drive</value>
+                                </tag>
+                            </tags>
+                        </trigger_prototype>
+                        <trigger_prototype>
+                            <uuid>a1b2c3d4e5f64789a0b1c2d3e4f56789</uuid>
+                            <expression>last(/HP-SmartArray-Template/hpraid.pd.temperature[{#PD}])&gt;{$HPRAID.PD.TEMP.MAX}</expression>
+                            <name>Smart Array: disk {#PD} temperature is {ITEM.LASTVALUE}C (max {$HPRAID.PD.TEMP.MAX}C)</name>
+                            <status>ENABLED</status>
+                            <priority>WARNING</priority>
+                            <description>Physical drive {#PD} temperature exceeds maximum threshold.</description>
+                            <type>SINGLE</type>
+                            <tags>
+                                <tag>
+                                    <tag>Application</tag>
+                                    <value>Smart Array</value>
+                                </tag>
+                                <tag>
+                                    <tag>Component</tag>
+                                    <value>Physical Drive</value>
+                                </tag>
+                            </tags>
                         </trigger_prototype>
                     </trigger_prototypes>
-                    <graph_prototypes/>
                 </discovery_rule>
             </discovery_rules>
-            <macros/>
-            <templates/>
-            <screens/>
         </template>
     </templates>
 </zabbix_export>
